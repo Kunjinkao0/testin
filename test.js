@@ -1,185 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+function countIslands(map) {
+    const rows = map.length;
+    const cols = map[0].length;
+    let islandCount = 0;
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS Triangle Rays</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #fff;
+    // 辅助函数，用于DFS遍历岛屿
+    function dfs(x, y) {
+        // 边界条件判断：坐标超出网格范围或当前位置不是陆地（即不是1）
+        if (x < 0 || x >= rows || y < 0 || y >= cols || map[x][y] === 0) {
+            return;
         }
 
-        .logo {
-            width: 300px;
-            height: 300px;
-            background-color: #5A9B50;
-            position: relative;
-            border-radius: 50%;
-            clip-path: circle(50% at 50% 50%);
+        // 将当前陆地标记为已访问（置为0）
+        map[x][y] = 0;
+
+        // 继续递归访问上下左右四个方向
+        dfs(x - 1, y); // 上
+        dfs(x + 1, y); // 下
+        dfs(x, y - 1); // 左
+        dfs(x, y + 1); // 右
+    }
+
+    // 遍历整个网格
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            // 如果找到一个未访问的岛屿
+            if (map[i][j] === 1) {
+                islandCount++;
+                dfs(i, j); // 用DFS访问整个岛屿
+            }
         }
+    }
 
-        #ray-container {
-            margin: 10px;
-            width: calc(100% - 20px);
-            height: calc(100% - 20px);
-            position: relative;
-            transform: rotate(calc(360deg/16/2));
-        }
+    return islandCount;
+}
 
-        .ray {
-            position: absolute;
-            width: 100%;
-            height: 50%;
-            background-color: white;
-            clip-path: polygon(50% 0, 45% 100%, 55% 100%);
-            transform-origin: 50% 100%;
-        }
+// 示例用法
+const map = [
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 0, 0, 0, 0, 0, 0, 1, 1],
+    [1, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+    [1, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+    [1, 1, 0, 0, 0, 0, 0, 1, 1, 1],
+    [1, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+];
 
-        .ray:nth-child(1) {
-            transform: rotate(0deg);
-        }
-
-        .ray:nth-child(2) {
-            transform: rotate(22.5deg);
-        }
-
-        .ray:nth-child(3) {
-            transform: rotate(45deg);
-        }
-
-        .ray:nth-child(4) {
-            transform: rotate(67.5deg);
-        }
-
-        .ray:nth-child(5) {
-            transform: rotate(90deg);
-        }
-
-        .ray:nth-child(6) {
-            transform: rotate(112.5deg);
-        }
-
-        .ray:nth-child(7) {
-            transform: rotate(135deg);
-        }
-
-        .ray:nth-child(8) {
-            transform: rotate(157.5deg);
-        }
-
-        .ray:nth-child(9) {
-            transform: rotate(180deg);
-        }
-
-        .ray:nth-child(10) {
-            transform: rotate(202.5deg);
-        }
-
-        .ray:nth-child(11) {
-            transform: rotate(225deg);
-        }
-
-        .ray:nth-child(12) {
-            transform: rotate(247.5deg);
-        }
-
-        .ray:nth-child(13) {
-            transform: rotate(270deg);
-        }
-
-        .ray:nth-child(14) {
-            transform: rotate(292.5deg);
-        }
-
-        .ray:nth-child(15) {
-            transform: rotate(315deg);
-        }
-
-        .ray:nth-child(16) {
-            transform: rotate(337.5deg);
-        }
-
-
-        #trangle-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: #5A9B50;
-            clip-path: polygon(50% 0, 15% 100%, 85% 100%);
-            transform: rotate(10deg);
-            transform-origin: 50% 0;
-            top: 35%;
-        }
-
-        #trangle-front {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            clip-path: polygon(50% 0, 15% 100%, 85% 100%);
-            transform: rotate(-10deg);
-            transform-origin: 50% 0;
-            top: 35%;
-        }
-
-        #cut1 {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: #5A9B50;
-            clip-path: polygon(37% 23%, 58% 27%, 61.5% 31%, 39% 27%);
-            z-index: 999;
-            transform: rotate(-10deg);
-            transform-origin: 50% 0;
-            top: 35%;
-        }
-
-        #cut2 {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            clip-path: polygon(36% 16%, 40% 22.5%, 31% 17%);
-            z-index: 999;
-            transform: rotate(-10deg);
-            transform-origin: 50% 0;
-            top: 35%;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="logo">
-        <div id="ray-container">
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-            <div class="ray"></div>
-        </div>
-
-        <div id="trangle-back"></div>
-        <div id="trangle-front"></div>
-        <div id="cut1"></div>
-        <div id="cut2"></div>
-    </div>
-</body>
-
-</html>
+console.log(countIslands(map)); // 输出: 4

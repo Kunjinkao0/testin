@@ -1,12 +1,14 @@
 function countIslands(map) {
+    if (!map || map.length === 0) return 0;  // 检查地图是否为空
+
     const rows = map.length;
     const cols = map[0].length;
     let islandCount = 0;
 
     // 辅助函数，用于DFS遍历岛屿
     function dfs(x, y) {
-        // 边界条件判断：坐标超出网格范围或当前位置不是陆地（即不是1）
-        if (x < 0 || x >= rows || y < 0 || y >= cols || map[x][y] === 0) {
+        // 边界条件：坐标超出范围，或位置上是水、null或无效数据
+        if (x < 0 || x >= rows || y < 0 || y >= cols || map[x][y] === 0 || map[x][y] === null) {
             return;
         }
 
@@ -23,7 +25,7 @@ function countIslands(map) {
     // 遍历整个网格
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
-            // 如果找到一个未访问的岛屿
+            // 如果找到一个未访问的陆地
             if (map[i][j] === 1) {
                 islandCount++;
                 dfs(i, j); // 用DFS访问整个岛屿
@@ -36,14 +38,14 @@ function countIslands(map) {
 
 // 示例用法
 const map = [
-    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 0, 0, 0, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 0, 0, 0, 1, 0],
-    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 0, 0, 1, 0, 0, 0, 0, 0],
-    [1, 1, 0, 0, 0, 0, 0, 0, 1, 0],
-    [1, 1, 0, 0, 0, 0, 0, 1, 1, 1],
-    [1, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+  [1,1,0,0,0,null,0,0,0,0],
+  [1,1,0,0,0,null,0,0,1,1],
+  [1,1,0,0,0,0,0,null,1,0],
+  [1,null,0,0,0,0,0,0,0,0],
+  [1,1,0,0,1,0,null,0,0,0],
+  [1,1,0,0,0,0,0,0,1,null],
+  [1,1,0,0,null,0,0,1,1,1],
+  [1,1,0,0,0,0,0,0,1,0],
 ];
 
-console.log(countIslands(map)); // 输出: 4
+console.log(countIslands(map)); // 输出：3

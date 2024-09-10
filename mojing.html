@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera to Canvas</title>
+  <style>
+    body, html {
+      margin: 0;
+      overflow: hidden;
+    }
+    #myVideo {
+      display: none; /* 隐藏视频元素，因为我们只需要它的流 */
+    }
+    #myCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <video id="myVideo" autoplay muted></video>
+  <canvas id="myCanvas"></canvas>
+  
+  <script>
+    const video = document.getElementById('myVideo');
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 获取摄像头流并将其设置为视频源
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        video.play();
+      } catch (error) {
+        console.error('获取摄像头失败:', error);
+      }
+    }
+
+    // 更新 canvas 大小为浏览器窗口的大小
+    function updateCanvasSize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    // 获取浏览器窗口坐标和大小，绘制视频到 canvas
+    function drawToCanvas() {
+      const browserX = window.screenX || window.screenLeft;
+      const browserY = window.screenY || window.screenTop;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      
+      // 更新 canvas 的大小
+      updateCanvasSize();
+
+      // 绘制视频到 canvas 上
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // 清除之前的内容
+      ctx.drawImage(
+        video,
+        browserX, browserY, // 从摄像头流中裁剪的区域
+        windowWidth, windowHeight, // 裁剪的区域大小
+        0, 0, // 绘制到 canvas 上的起始位置
+        canvas.width, canvas.height // 绘制到 canvas 上的尺寸
+      );
+    }
+
+    // 初始化摄像头并开始绘制
+    startCamera().then(() => {
+      video.addEventListener('play', function() {
+        // 在视频播放后开始绘制
+        setInterval(drawToCanvas, 100); // 每100毫秒刷新一次 canvas
+      });
+    });
+
+    // 监听浏览器窗口的大小和位置变化
+    window.addEventListener('resize', drawToCanvas);
+    window.addEventListener('mousemove', drawToCanvas);
+  </script>
+</body>
+</html>

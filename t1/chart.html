@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Canvas Chart Example with User Input</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  canvas { 
+    border: 1px solid black; 
+    display: block; /* 避免canvas下方出现空白 */
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .tooltip {
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    padding: 5px;
+    pointer-events: none;
+  }
+  button, input[type="range"], label, textarea, input[type="text"] {
+    margin-bottom: 10px;
+  }
+  .tooltip {
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    padding: 5px;
+    pointer-events: none;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="controls">
+    <button id="chartTypeButton">Current Chart Type: bar</button>
+    <input type="range" min="0.1" max="2" step="0.1" value="1" id="zoomSlider">
+    <label for="titleLabel">Chart Title:</label>
+    <input type="text" id="titleLabel" placeholder="Enter Chart Title">
+    <label for="xLabelInput">X-Axis JSON Data:</label>
+    <textarea id="xLabelInput" rows="4" cols="50" placeholder='"a,b,c,d,e,f"'></textarea>
+    <label for="yLabelInput">Y-Axis JSON Data:</label>
+    <textarea id="yLabelInput" rows="4" cols="50" placeholder='"1,2,3,4,5,6"'></textarea>
+    <button id="drawButton">Draw Chart</button>
+    <div id="tooltip" class="tooltip" style="display:none;"></div>
+  </div>
+  <canvas id="chartCanvas" width="800" height="400"></canvas>
+</div>
+<div id="tooltip" class="tooltip" style="display:none;"></div>
+<script src="chart.js"></script>
+</body>
+</html>
